@@ -14,7 +14,7 @@ namespace SLAU
 
         static void PrintMatrix(double[,] Matrix)
         {
-            Console.WriteLine($"Вывод матрицы: ");
+            Console.WriteLine($"Вывод СЛАУ: ");
             for (int i = 0; i < Matrix.GetUpperBound(0) + 1; i++)
             {
                 for (int j = 0; j < Matrix.GetUpperBound(1) + 1; j++)
@@ -66,6 +66,8 @@ namespace SLAU
                 #region Гаусса
                 //Получаем результаты с помощью метода Гаусса
                 double[] Result1 = MethodGauss();
+
+                Console.WriteLine("\nМетод Гауса: ");
 
                 //Выводим ответы
                 for (int i = 0; i < valueEquation; i++)
