@@ -36,53 +36,58 @@ namespace SLAU
 
         static void Main(string[] args)
         {
-
-            Console.Write("Кол-во уравнений: ");
-            valueEquation = int.Parse(Console.ReadLine());
-
-            M = new double[valueEquation, valueEquation];
-            Y = new double[valueEquation];
-
-            //Вводим матрицу А
-            for (int i = 0; i < M.GetUpperBound(0) + 1; i++)
+            try
             {
-                for (int j = 0; j < M.GetUpperBound(1) + 1; j++)
+                Console.Write("Кол-во уравнений: ");
+                valueEquation = int.Parse(Console.ReadLine());
+
+                M = new double[valueEquation, valueEquation];
+                Y = new double[valueEquation];
+
+                //Вводим матрицу А
+                for (int i = 0; i < M.GetUpperBound(0) + 1; i++)
                 {
-                    Console.Write($"A[{i + 1},{j + 1}] : ");
-                    M[i, j] = Convert.ToDouble(Console.ReadLine());
+                    for (int j = 0; j < M.GetUpperBound(1) + 1; j++)
+                    {
+                        Console.Write($"A[{i + 1},{j + 1}] : ");
+                        M[i, j] = Convert.ToDouble(Console.ReadLine());
+                    }
                 }
-            }
 
-            //Вводим правую часть Y
-            for (int i = 0; i < Y.GetUpperBound(0) + 1; i++)
+                //Вводим правую часть Y
+                for (int i = 0; i < Y.GetUpperBound(0) + 1; i++)
+                {
+                    Console.Write($"Y[{i + 1}] : ");
+                    Y[i] = Convert.ToDouble(Console.ReadLine());
+                }
+
+                //Выводим матрицу
+                PrintMatrix(M);
+
+                #region Гаусса
+                Console.WriteLine("\nМетод Гауса: ");
+
+                double[] Result1 = MethodGauss();
+
+                //Выводим ответы
+                for (int i = 0; i < valueEquation; i++)
+                    Console.WriteLine($"x[{i + 1}] = {Result1[i]}");
+                #endregion
+
+                #region Жордана
+                Console.WriteLine("\nМетод Жордана: ");
+
+                double[] Result2 = MethodJordana();
+
+                // Выводим ответы
+                for (int i = 0; i < valueEquation; i++)
+                    Console.WriteLine($"x[{i + 1}] = {Result2[i]}");
+                #endregion
+            }
+            catch(Exception ex)
             {
-                Console.Write($"Y[{i + 1}] : ");
-                Y[i] = Convert.ToDouble(Console.ReadLine());
+                //Console.WriteLine(ex.Message);
             }
-
-            //Выводим матрицу
-            PrintMatrix(M);
-
-            #region Гаусса
-            Console.WriteLine("\nМетод Гауса: ");
-
-            double[] Result1 = MethodGauss();
-
-            //Выводим ответы
-            for (int i = 0; i < valueEquation; i++)
-                Console.WriteLine($"x[{i + 1}]={Result1[i]}");
-            #endregion
-
-            #region Жордана
-            Console.WriteLine("\nМетод Жордана: ");
-
-            MethodJordana();
-
-            //Выводим ответы
-            //for (int i = 0; i < valueEquation; i++)
-            //    Console.WriteLine($"x[{i + 1}]={Result2[i]}");
-            #endregion
-
             Console.ReadKey();
         }
 
@@ -151,7 +156,7 @@ namespace SLAU
         }
 
 
-        static void MethodJordana()
+        static double[] MethodJordana()
         {
             int row = M.GetLength(0);
             int column = M.GetLength(1) + 1;
@@ -166,15 +171,6 @@ namespace SLAU
                     B[i, j] = M[i, j];
                 }
                 B[i, column - 1] = Y2[i];
-            }
-
-            for (int i = 0; i < row; i++)
-            {
-                for (int j = 0; j < column; j++)
-                {
-                    Console.Write($"{B[i,j]} ");
-                }
-                Console.WriteLine();
             }
 
             for (int i = 0; i < row; i++)
@@ -246,11 +242,12 @@ namespace SLAU
                 }
             }
 
-            // Done, now print the answer on the screen
-            //for (int i = 0; i < row; i++)
-            //{
-            //    Console.WriteLine($"x{i + 1} = {Matrix[i, row]}");
-            //}
+            double[] Return = new double[row];
+            for (int i = 0; i < row; i++)
+            {
+                Return[i] = B[i, row];
+            }
+            return Return;
         }
     }
 }
