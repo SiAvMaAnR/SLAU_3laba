@@ -83,8 +83,24 @@ namespace SLAU
                 for (int i = 0; i < valueEquation; i++)
                     Console.WriteLine($"x[{i + 1}] = {Result2[i]}");
                 #endregion
+
+                #region Обратная Матрица
+                Console.WriteLine("\nМетод Жордана / Обратная матрица: ");
+
+                double[,] C = (double[,])M.Clone();
+                double[,] Result3 = InverseMatrix(C);
+
+                for (int i = 0; i < Result3.GetLength(0); i++)
+                {
+                    for (int j = 0; j < Result3.GetLength(1); j++)
+                    {
+                        Console.Write($"{String.Format("{0,3}",Result3[i, j])} ");
+                    }
+                    Console.WriteLine();
+                }
+                #endregion
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 //Console.WriteLine(ex.Message);
             }
@@ -154,7 +170,6 @@ namespace SLAU
 
             return x;
         }
-
 
         static double[] MethodJordana()
         {
@@ -248,6 +263,59 @@ namespace SLAU
                 Return[i] = B[i, row];
             }
             return Return;
+        }
+
+        static double[,] InverseMatrix(double[,] Matrix)
+        {
+            int n = Matrix.GetLength(0); //Размерность начальной матрицы
+
+            double[,] xirtaM = new double[n, n]; //Единичная матрица (искомая обратная матрица)
+            for (int i = 0; i < n; i++)
+                xirtaM[i, i] = 1;
+
+            double[,] Matrix_Big = new double[n, 2 * n]; //Общая матрица, получаемая скреплением Начальной матрицы и единичной
+            for (int i = 0; i < n; i++)
+                for (int j = 0; j < n; j++)
+                {
+                    Matrix_Big[i, j] = Matrix[i, j];
+                    Matrix_Big[i, j + n] = xirtaM[i, j];
+                }
+
+            //Прямой ход (Зануление нижнего левого угла)
+            for (int k = 0; k < n; k++) //k-номер строки
+            {
+                for (int i = 0; i < 2 * n; i++) //i-номер столбца
+                    Matrix_Big[k, i] = Matrix_Big[k, i] / Matrix[k, k]; //Деление k-строки на первый член !=0 для преобразования его в единицу
+                for (int i = k + 1; i < n; i++) //i-номер следующей строки после k
+                {
+                    double K = Matrix_Big[i, k] / Matrix_Big[k, k]; //Коэффициент
+                    for (int j = 0; j < 2 * n; j++) //j-номер столбца следующей строки после k
+                        Matrix_Big[i, j] = Matrix_Big[i, j] - Matrix_Big[k, j] * K; //Зануление элементов матрицы ниже первого члена, преобразованного в единицу
+                }
+                for (int i = 0; i < n; i++) //Обновление, внесение изменений в начальную матрицу
+                    for (int j = 0; j < n; j++)
+                        Matrix[i, j] = Matrix_Big[i, j];
+            }
+
+            //Обратный ход (Зануление верхнего правого угла)
+            for (int k = n - 1; k > -1; k--) //k-номер строки
+            {
+                for (int i = 2 * n - 1; i > -1; i--) //i-номер столбца
+                    Matrix_Big[k, i] = Matrix_Big[k, i] / Matrix[k, k];
+                for (int i = k - 1; i > -1; i--) //i-номер следующей строки после k
+                {
+                    double K = Matrix_Big[i, k] / Matrix_Big[k, k];
+                    for (int j = 2 * n - 1; j > -1; j--) //j-номер столбца следующей строки после k
+                        Matrix_Big[i, j] = Matrix_Big[i, j] - Matrix_Big[k, j] * K;
+                }
+            }
+
+            //Отделяем от общей матрицы
+            for (int i = 0; i < n; i++)
+                for (int j = 0; j < n; j++)
+                    xirtaM[i, j] = Matrix_Big[i, j + n];
+
+            return xirtaM;
         }
     }
 }
