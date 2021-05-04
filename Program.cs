@@ -8,7 +8,9 @@ namespace SLAU
 {
     class Program
     {
-        static double[,] A;
+        static double[,] M;
+        
+        
         static double[] Y;
         static int valueEquation;
 
@@ -19,14 +21,14 @@ namespace SLAU
             {
                 for (int j = 0; j < Matrix.GetUpperBound(1) + 1; j++)
                 {
-                        if (j != 0)
-                        {
-                            Console.Write($" + {String.Format("{0,3}", Matrix[i, j])}*x{j + 1}");
-                        }
-                        else
-                        {
-                            Console.Write($"   {String.Format("{0,3}", Matrix[i, j])}*x{j + 1}");
-                        }
+                    if (j != 0)
+                    {
+                        Console.Write($" + {String.Format("{0,3}", Matrix[i, j])}*x{j + 1}");
+                    }
+                    else
+                    {
+                        Console.Write($"   {String.Format("{0,3}", Matrix[i, j])}*x{j + 1}");
+                    }
                 }
                 Console.WriteLine($" = { String.Format("{0,3}", Y[i])}");
             }
@@ -34,70 +36,68 @@ namespace SLAU
 
         static void Main(string[] args)
         {
-            try
+
+            Console.Write("Кол-во уравнений: ");
+            valueEquation = int.Parse(Console.ReadLine());
+
+            M = new double[valueEquation, valueEquation];
+            Y = new double[valueEquation];
+
+            //Вводим матрицу А
+            for (int i = 0; i < M.GetUpperBound(0) + 1; i++)
             {
-
-                Console.Write("Кол-во уравнений: ");
-                valueEquation = int.Parse(Console.ReadLine());
-
-                A = new double[valueEquation, valueEquation];
-                Y = new double[valueEquation];
-
-                //Вводим матрицу А
-                for (int i = 0; i < A.GetUpperBound(0) + 1; i++)
+                for (int j = 0; j < M.GetUpperBound(1) + 1; j++)
                 {
-                    for (int j = 0; j < A.GetUpperBound(1) + 1; j++)
-                    {
-                        Console.Write($"A[{i + 1},{j + 1}] : ");
-                        A[i, j] = Convert.ToDouble(Console.ReadLine());
-                    }
+                    Console.Write($"A[{i + 1},{j + 1}] : ");
+                    M[i, j] = Convert.ToDouble(Console.ReadLine());
                 }
-
-                //Вводим правую часть Y
-                for (int i = 0; i < Y.GetUpperBound(0) + 1; i++)
-                {
-                    Console.Write($"Y[{i + 1}] : ");
-                    Y[i] = Convert.ToDouble(Console.ReadLine());
-                }
-
-                //Выводим матрицу
-                PrintMatrix(A);
-
-                #region Гаусса
-                //Получаем результаты с помощью метода Гаусса
-                double[] Result1 = MethodGauss();
-
-                Console.WriteLine("\nМетод Гауса: ");
-
-                //Выводим ответы
-                for (int i = 0; i < valueEquation; i++)
-                    Console.WriteLine($"x[{i + 1}]={Result1[i]}");
-                #endregion
-
-                #region Жордана
-                //Получаем результаты с помощью метода Жордана
-                double[] Result2 = MethodJordana();
-
-                //Выводим ответы
-                for (int i = 0; i < valueEquation; i++)
-                    Console.WriteLine($"x[{i + 1}]={Result2[i]}");
-                #endregion
             }
-            catch (Exception ex)
+
+            //Вводим правую часть Y
+            for (int i = 0; i < Y.GetUpperBound(0) + 1; i++)
             {
-                Console.WriteLine( ex.Message);
+                Console.Write($"Y[{i + 1}] : ");
+                Y[i] = Convert.ToDouble(Console.ReadLine());
             }
+
+            //Выводим матрицу
+            PrintMatrix(M);
+
+            #region Гаусса
+            Console.WriteLine("\nМетод Гауса: ");
+
+            double[] Result1 = MethodGauss();
+
+            //Выводим ответы
+            for (int i = 0; i < valueEquation; i++)
+                Console.WriteLine($"x[{i + 1}]={Result1[i]}");
+            #endregion
+
+            #region Жордана
+            Console.WriteLine("\nМетод Жордана: ");
+
+            MethodJordana();
+
+            //Выводим ответы
+            //for (int i = 0; i < valueEquation; i++)
+            //    Console.WriteLine($"x[{i + 1}]={Result2[i]}");
+            #endregion
+
+            Console.ReadKey();
         }
 
         static double[] MethodGauss()
         {
+            double[,] A = (double[,])M.Clone();
+            double[] Y1 = (double[])Y.Clone();
+
             double[] x = new double[valueEquation];
             //Точность 
             const double eps = 0.00001;
 
             double max;
             int index;
-            for ( int k = 0; k < valueEquation; k++)
+            for (int k = 0; k < valueEquation; k++)
             {
                 //Поиск строки с максимальным A[i,k]
                 max = Math.Abs(A[k, k]);
@@ -123,7 +123,7 @@ namespace SLAU
                     (A[k, j], A[index, j]) = (A[index, j], A[k, j]);
                 }
 
-                (Y[k], Y[index]) = (Y[index], Y[k]);
+                (Y1[k], Y1[index]) = (Y1[index], Y1[k]);
 
                 // Нормализация уравнений
                 for (int i = k; i < valueEquation; i++)
@@ -132,29 +132,125 @@ namespace SLAU
                     if (Math.Abs(temp) < eps) continue; // для нулевого коэффициента пропустить
                     for (int j = 0; j < valueEquation; j++)
                         A[i, j] = A[i, j] / temp;
-                    Y[i] = Y[i] / temp;
+                    Y1[i] = Y1[i] / temp;
                     if (i == k) continue; // уравнение не вычитать само из себя
                     for (int j = 0; j < valueEquation; j++)
                         A[i, j] = A[i, j] - A[k, j];
-                    Y[i] = Y[i] - Y[k];
+                    Y1[i] = Y1[i] - Y1[k];
                 }
             }
             // обратная подстановка
-            for ( int k = valueEquation - 1; k >= 0; k--)
+            for (int k = valueEquation - 1; k >= 0; k--)
             {
-                x[k] = Y[k];
+                x[k] = Y1[k];
                 for (int i = 0; i < k; i++)
-                    Y[i] = Y[i] - A[i, k] * x[k];
+                    Y1[i] = Y1[i] - A[i, k] * x[k];
             }
 
             return x;
         }
 
 
-        static double[] MethodJordana()
+        static void MethodJordana()
         {
+            int row = M.GetLength(0);
+            int column = M.GetLength(1) + 1;
 
-            return null;
+            double[,] B = new double[row, column];
+            double[] Y2 = (double[])Y.Clone();
+
+            for (int i = 0; i < row; i++)
+            {
+                for (int j = 0; j < column - 1; j++)
+                {
+                    B[i, j] = M[i, j];
+                }
+                B[i, column - 1] = Y2[i];
+            }
+
+            for (int i = 0; i < row; i++)
+            {
+                for (int j = 0; j < column; j++)
+                {
+                    Console.Write($"{B[i,j]} ");
+                }
+                Console.WriteLine();
+            }
+
+            for (int i = 0; i < row; i++)
+            {
+                double use = B[i, i];
+                if (use == 0) 
+                {
+                    int j;
+                    for (j = i + 1; j < row; j++) 
+                    {
+                        if (B[j, i] != 0)
+                        {
+                            double[] oldmatrix = new double[column];
+                            double[] newmatrix = new double[column];
+
+                            for (int k = 0; k < column; k++) oldmatrix[k] = B[i, k];
+                            for (int k = 0; k < column; k++)
+                            {
+                                B[i, k] = B[j, k];
+                                B[j, k] = oldmatrix[k];
+                            }
+                            use = B[i, i];
+                            //for (int k = 0; k < column; k++) Console.WriteLine($"x {i + 1}-{k + 1} = {Matrix[i, k]}");
+                            //for (int k = 0; k < column; k++) Console.WriteLine($"x {j + 1}-{k + 1} = {Matrix[j, k]}");
+                            break;
+                        }
+                    }
+
+                    if (j == row) 
+                    {
+                        Console.WriteLine("Решение получить невозможно из - за нулевого столбца матрицы А");
+                        break; 
+                    }
+                }
+                if (use != 1) 
+                {
+                    for (int j = 0; j < column; j++)
+                    {
+                        B[i, j] /= use;
+                        if (B[i, j] == -0) B[i, j] = 0;
+                        //Console.WriteLine($"x{i + 1}-{j + 1}/{use} = {Matrix[i, j]}");
+                    }
+                }
+                for (int j = i + 1; j < row; j++) 
+                {
+                    double cons = B[j, i];
+                    if (cons != 0) 
+                    {
+                        for (int k = i; k < column; k++)
+                        {
+                            B[j, k] = -cons * B[i, k] + B[j, k];
+                        }
+                    }
+                }
+            }
+            for (int i = row - 1; i >= 0; i--)
+            {
+                if (B[i, i] == 0) break; 
+                for (int j = i - 1; j >= 0; j--)
+                {
+                    double cons = B[j, i];
+                    if (cons != 0) 
+                    {
+                        for (int k = i; k < column; k++)
+                        {
+                            B[j, k] = -cons * B[i, k] + B[j, k];
+                        }
+                    }
+                }
+            }
+
+            // Done, now print the answer on the screen
+            //for (int i = 0; i < row; i++)
+            //{
+            //    Console.WriteLine($"x{i + 1} = {Matrix[i, row]}");
+            //}
         }
     }
 }
