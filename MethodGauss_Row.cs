@@ -61,12 +61,12 @@ namespace SLAU
                         im = i;
                     }
                 }
+
                 for (j = 0; j < Dimension; j++)
                 {
                     (MatrixA[j, im], MatrixA[j, k]) = (MatrixA[j, k], MatrixA[j, im]);
-                    (order[im], order[k]) = (order[k], order[im]);
                 }
-
+                (order[im], order[k]) = (order[k], order[im]);
 
                 for (i = k + 1; i < Dimension; i++)
                 {

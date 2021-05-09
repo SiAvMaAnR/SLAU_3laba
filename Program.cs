@@ -86,11 +86,11 @@ namespace SLAU
         {
             try
             {
-                //SetMatrix();
-                Dimension = 3;
+                SetMatrix();
+                //Dimension = 3;
+                //MatrixA = TestA();
+                //MatrixB = TestB();
 
-                MatrixA = TestA();
-                MatrixB = TestB();
                 PrintSLAU(MatrixA);
 
                 double[] Result1 = new MethodGauss(MatrixA, MatrixB, Dimension).Run();
@@ -123,15 +123,15 @@ namespace SLAU
         {
             double[,] matrix = new double[Dimension, Dimension];
 
-            matrix[0, 0] = 2;
-            matrix[0, 1] = 0;
-            matrix[0, 2] = -3;
-            matrix[1, 0] = -4;
-            matrix[1, 1] = -3;
-            matrix[1, 2] = 2;
-            matrix[2, 0] = 5;
+            matrix[0, 0] = 4;
+            matrix[0, 1] = 2;
+            matrix[0, 2] = 1;
+            matrix[1, 0] = 3;
+            matrix[1, 1] = 5;
+            matrix[1, 2] = -1;
+            matrix[2, 0] = 2;
             matrix[2, 1] = 1;
-            matrix[2, 2] = 3;
+            matrix[2, 2] = -4;
 
             return matrix;
         }
@@ -141,9 +141,9 @@ namespace SLAU
         {
             double[] matrix = new double[Dimension];
 
-            matrix[0] =-3;
-            matrix[1] =-1;
-            matrix[2] =1;
+            matrix[0] =3;
+            matrix[1] =4;
+            matrix[2] =6;
 
             return matrix;
         }

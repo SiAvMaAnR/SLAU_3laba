@@ -12,6 +12,7 @@ namespace SLAU
         private double[] MatrixB;
         private int Dimension;
         private double[] X;
+        int[] order;
 
         public MethodGauss_Column_Row(double[,] MatrixA, double[] MatrixB, int Dimension)
         {
@@ -42,8 +43,14 @@ namespace SLAU
 
         void StraightRun(int Dimension, double[,] MatrixA, double[] MatrixB)
         {
+            order = new int[Dimension];
+            for (int i = 0; i < order.Length; i++)
+            {
+                order[i] = i;
+            }
+
             double v;
-            for (int k = 0, i, j, imC,imR; k < Dimension - 1; k++)
+            for (int k = 0, i, j, imC, imR; k < Dimension - 1; k++)
             {
                 imC = k;
                 imR = k;
@@ -53,15 +60,24 @@ namespace SLAU
                     {
                         imC = i;
                     }
-                }
-                if (imC != k)
-                {
-                    for (j = 0; j < Dimension; j++)
+                    if (Math.Abs(MatrixA[k, imR]) < Math.Abs(MatrixA[k, i]))
                     {
-                        (MatrixA[imC, j], MatrixA[k, j]) = (MatrixA[k, j], MatrixA[imC, j]);
+                        imR = i;
                     }
-                    (MatrixB[imC], MatrixB[k]) = (MatrixB[k], MatrixB[imC]);
                 }
+
+
+                for (j = 0; j < Dimension; j++)
+                {
+                    (MatrixA[imC, j], MatrixA[k, j]) = (MatrixA[k, j], MatrixA[imC, j]);
+                }
+                (MatrixB[imC], MatrixB[k]) = (MatrixB[k], MatrixB[imC]);
+
+                for (j = 0; j < Dimension; j++)
+                {
+                    (MatrixA[j, imR], MatrixA[j, k]) = (MatrixA[j, k], MatrixA[j, imR]);
+                }
+                (order[imR], order[k]) = (order[k], order[imR]);
 
 
                 for (i = k + 1; i < Dimension; i++)
@@ -92,6 +108,16 @@ namespace SLAU
                     s = s + MatrixA[i, j] * x[j];
                 }
                 x[i] = (MatrixB[i] - s) / MatrixA[i, i];
+            }
+            OrderSort(x);
+        }
+
+        void OrderSort(double[] x)
+        {
+            var CopyX = (double[])x.Clone();
+            for (int i = 0; i < CopyX.Length; i++)
+            {
+                x[i] = CopyX[order[i]];
             }
         }
     }

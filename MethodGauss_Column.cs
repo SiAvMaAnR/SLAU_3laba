@@ -48,7 +48,7 @@ namespace SLAU
                 im = k;
                 for (i = k + 1; i < Dimension; i++)
                 {
-                    if (Math.Abs(MatrixA[im,k]) < Math.Abs(MatrixA[i,k]))
+                    if (Math.Abs(MatrixA[im, k]) < Math.Abs(MatrixA[i, k]))
                     {
                         im = i;
                     }
