@@ -29,12 +29,6 @@ namespace SLAU
             //Прямой ход
             StraightRun(Dimension, MatrixA, MatrixB);
 
-            for (int i = 0; i < Dimension; i++)
-            {
-                Console.Write($"{order[i]} ");
-            }
-            Console.WriteLine();
-
             //Обратный ход
             ReverseRun(Dimension, MatrixA, MatrixB, X);
 
@@ -55,7 +49,6 @@ namespace SLAU
             {
                 order[i] = i;
             }
-
 
             double v;
             for (int k = 0, im, i, j; k < Dimension - 1; k++)
@@ -97,8 +90,6 @@ namespace SLAU
 
         void ReverseRun(int Dimension, double[,] MatrixA, double[] MatrixB, double[] x)
         {
-            var M = new double[Dimension];
-
             double s = 0;
             x[Dimension - 1] = MatrixB[Dimension - 1] / MatrixA[Dimension - 1, Dimension - 1];
             for (int i = Dimension - 2, j; 0 <= i; i--)
@@ -109,10 +100,17 @@ namespace SLAU
                     s = s + MatrixA[i, j] * x[j];
                 }
                 x[i] = (MatrixB[i] - s) / MatrixA[i, i];
-                //x[order[i]] = (MatrixB[i] - s) / MatrixA[i, i];
             }
+            OrderSort(x);
+        }
 
-           // ShowVector(Dimension,M);
+        void OrderSort(double[] x)
+        {
+            var CopyX = (double[])x.Clone();
+            for (int i = 0; i < CopyX.Length; i++)
+            {
+                x[i] = CopyX[order[i]];
+            }
         }
     }
 }
