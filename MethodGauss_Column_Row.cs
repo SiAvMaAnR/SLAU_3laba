@@ -43,23 +43,24 @@ namespace SLAU
         void StraightRun(int Dimension, double[,] MatrixA, double[] MatrixB)
         {
             double v;
-            for (int k = 0, i, j, im; k < Dimension - 1; k++)
+            for (int k = 0, i, j, imC,imR; k < Dimension - 1; k++)
             {
-                im = k;
+                imC = k;
+                imR = k;
                 for (i = k + 1; i < Dimension; i++)
                 {
-                    if (Math.Abs(MatrixA[im, k]) < Math.Abs(MatrixA[i, k]))
+                    if (Math.Abs(MatrixA[imC, k]) < Math.Abs(MatrixA[i, k]))
                     {
-                        im = i;
+                        imC = i;
                     }
                 }
-                if (im != k)
+                if (imC != k)
                 {
                     for (j = 0; j < Dimension; j++)
                     {
-                        (MatrixA[im, j], MatrixA[k, j]) = (MatrixA[k, j], MatrixA[im, j]);
+                        (MatrixA[imC, j], MatrixA[k, j]) = (MatrixA[k, j], MatrixA[imC, j]);
                     }
-                    (MatrixB[im], MatrixB[k]) = (MatrixB[k], MatrixB[im]);
+                    (MatrixB[imC], MatrixB[k]) = (MatrixB[k], MatrixB[imC]);
                 }
 
 
