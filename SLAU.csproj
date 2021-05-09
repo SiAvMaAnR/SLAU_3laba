@@ -46,6 +46,7 @@
     <Compile Include="InverseJordanMatrix.cs" />
     <Compile Include="MethodGauss.cs" />
     <Compile Include="MethodGauss_Column.cs" />
+    <Compile Include="MethodGauss_Column_Row.cs" />
     <Compile Include="MethodGauss_Row.cs" />
     <Compile Include="MethodJordan.cs" />
     <Compile Include="Program.cs" />

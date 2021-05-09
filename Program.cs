@@ -102,11 +102,14 @@ namespace SLAU
                 double[] Result3 = new MethodGauss_Row(MatrixA, MatrixB, Dimension).Run();
                 PrintAnswer(Result3, "Метод Гаусса (строки): ");
 
-                double[] Result4 = new MethodJordan(MatrixA, MatrixB, Dimension).Run();
-                PrintAnswer(Result4, "Метод Жордана: ");
+                double[] Result4 = new MethodGauss_Column_Row(MatrixA, MatrixB, Dimension).Run();
+                PrintAnswer(Result4, "Метод Гаусса (строки и столбцы): ");
 
-                double[,] Result5 = new InverseJordanMatrix(MatrixA, MatrixB, Dimension).Run();
-                PrintAnswer(Result5, "Метод Жордана / Обратная матрица: ");
+                double[] Result5 = new MethodJordan(MatrixA, MatrixB, Dimension).Run();
+                PrintAnswer(Result5, "Метод Жордана: ");
+
+                double[,] Result6 = new InverseJordanMatrix(MatrixA, MatrixB, Dimension).Run();
+                PrintAnswer(Result6, "Метод Жордана / Обратная матрица: ");
             }
             catch (Exception ex)
             {
