@@ -76,7 +76,7 @@ namespace SLAU
             //Вводим правую часть MatrixB
             for (int i = 0; i < MatrixB.GetUpperBound(0) + 1; i++)
             {
-                Console.Write($"MatrixB[{i + 1}] : ");
+                Console.Write($"B[{i + 1}] : ");
                 MatrixB[i] = Convert.ToDouble(Console.ReadLine());
             }
 
@@ -86,24 +86,63 @@ namespace SLAU
         {
             try
             {
-                SetMatrix();
+                //SetMatrix();
+                Dimension = 3;
 
+                MatrixA = TestA();
+                MatrixB = TestB();
                 PrintSLAU(MatrixA);
 
                 double[] Result1 = new MethodGauss(MatrixA, MatrixB, Dimension).Run();
                 PrintAnswer(Result1,"Метод Гаусса: ");
 
-                double[] Result2 = new MethodJordan(MatrixA, MatrixB, Dimension).Run();
-                PrintAnswer(Result2, "Метод Жордана: ");
+                double[] Result2 = new MethodGauss_Column(MatrixA, MatrixB, Dimension).Run();
+                PrintAnswer(Result2, "Метод Гаусса (колонки): ");
 
-                double[,] Result3 = new InverseJordanMatrix(MatrixA, MatrixB, Dimension).Run();
-                PrintAnswer(Result3, "Метод Жордана / Обратная матрица: ");
+                double[] Result3 = new MethodGauss_Row(MatrixA, MatrixB, Dimension).Run();
+                PrintAnswer(Result3, "Метод Гаусса (строки): ");
+
+                double[] Result4 = new MethodJordan(MatrixA, MatrixB, Dimension).Run();
+                PrintAnswer(Result4, "Метод Жордана: ");
+
+                double[,] Result5 = new InverseJordanMatrix(MatrixA, MatrixB, Dimension).Run();
+                PrintAnswer(Result5, "Метод Жордана / Обратная матрица: ");
             }
             catch (Exception ex)
             {
-                //Console.WriteLine(ex.Message);
+                Console.WriteLine($"Не корректные данные\n" + ex.Message);
             }
             Console.ReadKey();
+        }
+
+
+        static double[,] TestA()
+        {
+            double[,] matrix = new double[Dimension, Dimension];
+
+            matrix[0, 0] = 5;
+            matrix[0, 1] = 0;
+            matrix[0, 2] = 1;
+            matrix[1, 0] = 1;
+            matrix[1, 1] = 3;
+            matrix[1, 2] = -1;
+            matrix[2, 0] = -3;
+            matrix[2, 1] = 2;
+            matrix[2, 2] = 10;
+
+            return matrix;
+        }
+
+
+        static double[]TestB()
+        {
+            double[] matrix = new double[Dimension];
+
+            matrix[0] =24;
+            matrix[1] =9;
+            matrix[2] =-23;
+
+            return matrix;
         }
 
     }
