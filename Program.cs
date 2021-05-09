@@ -120,15 +120,15 @@ namespace SLAU
         {
             double[,] matrix = new double[Dimension, Dimension];
 
-            matrix[0, 0] = -2;
-            matrix[0, 1] = 3;
-            matrix[0, 2] = 1;
-            matrix[1, 0] = 5;
-            matrix[1, 1] = 1;
-            matrix[1, 2] = -1;
-            matrix[2, 0] = 2;
-            matrix[2, 1] = -2;
-            matrix[2, 2] = 4;
+            matrix[0, 0] = 2;
+            matrix[0, 1] = 0;
+            matrix[0, 2] = -3;
+            matrix[1, 0] = -4;
+            matrix[1, 1] = -3;
+            matrix[1, 2] = 2;
+            matrix[2, 0] = 5;
+            matrix[2, 1] = 1;
+            matrix[2, 2] = 3;
 
             return matrix;
         }
@@ -138,8 +138,8 @@ namespace SLAU
         {
             double[] matrix = new double[Dimension];
 
-            matrix[0] =7;
-            matrix[1] =-2;
+            matrix[0] =-3;
+            matrix[1] =-1;
             matrix[2] =1;
 
             return matrix;
